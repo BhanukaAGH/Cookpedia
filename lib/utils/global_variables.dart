@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:cookpedia/screens/home_screen.dart';
 
 List<Widget> mainScreens = [
+  const AddRecipeScreen(),
   const HomeScreen(),
   const MyRecipeScreen(),
-  const AddRecipeScreen(),
   const FavoriteScreen(),
   ProfileScreen(uid: FirebaseAuth.instance.currentUser!.uid),
 ];

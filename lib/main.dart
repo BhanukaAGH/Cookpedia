@@ -1,5 +1,4 @@
 import 'package:cookpedia/providers/user_provider.dart';
-import 'package:cookpedia/screens/home_screen.dart';
 import 'package:cookpedia/screens/login_screen.dart';
 import 'package:cookpedia/screens/root_screen.dart';
 import 'package:cookpedia/utils/colors.dart';
@@ -32,6 +31,7 @@ class MyApp extends StatelessWidget {
         title: 'Cookpedia',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
           colorScheme: ThemeData().colorScheme.copyWith(
                 primary: primaryColor,
               ),
