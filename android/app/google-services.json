@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "677584202909",
+    "project_id": "cookpedia-a07a7",
+    "storage_bucket": "cookpedia-a07a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677584202909:android:bc94966a1b22b331633874",
+        "android_client_info": {
+          "package_name": "com.example.cookpedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677584202909-q9jm4q6uo9a9ui9sb998mnmeb770b4jt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjU4AuQmJd3PR0c2Z9GGE2oMXFLbUisZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677584202909-q9jm4q6uo9a9ui9sb998mnmeb770b4jt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
