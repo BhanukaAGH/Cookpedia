@@ -41,6 +41,7 @@ class AddIngredientInput extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: items.length,
             itemBuilder: (context, index) {
