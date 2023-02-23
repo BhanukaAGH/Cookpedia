@@ -1,6 +1,7 @@
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/add_recipe/add_ingredients_input.dart';
 import 'package:cookpedia/widgets/add_recipe/image_input.dart';
+import 'package:cookpedia/widgets/add_recipe/recipe_dropdown.dart';
 import 'package:cookpedia/widgets/add_recipe/recipe_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +24,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final TextEditingController _instructionController = TextEditingController();
   final List<String> ingredients = [];
   final List<String> instructions = [];
+  String recipeCategory = 'All';
 
   @override
   void dispose() {
@@ -117,6 +119,17 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                         hintText: '3 people',
                         textInputType: TextInputType.text,
                         textInputAction: TextInputAction.next,
+                      ),
+                      const SizedBox(height: 20),
+                      RecipeDropDown(
+                        label: "Category",
+                        hintText: "category",
+                        selectValue: recipeCategory,
+                        onChanged: (String? value) {
+                          setState(() {
+                            recipeCategory = value!;
+                          });
+                        },
                       ),
 
                       // Add Ingredients section
