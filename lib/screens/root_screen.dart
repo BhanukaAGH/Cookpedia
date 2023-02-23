@@ -95,7 +95,7 @@ class _RootScreenState extends State<RootScreen> {
               ),
             ),
             const BottomNavigationBarItem(
-              label: 'Fundraisers',
+              label: 'Favorites',
               icon: Icon(Icons.favorite),
             ),
             const BottomNavigationBarItem(
