@@ -135,18 +135,30 @@ class HomeScreen extends StatelessWidget {
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemCount: 10,
+                  itemCount: recipes.length,
                   itemBuilder: ((context, index) {
+                    final recipe = recipes[index];
                     return RecipeListTile(
-                      title: "Recipe Title",
-                      imageUrl:
-                          "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
-                      postedBy: "Lahiru Madhushanka",
-                      cookTime: "1hr 30mins",
+                      title: recipe['recipeTitle'],
+                      imageUrl: recipe['recipeImage'],
+                      postedBy: recipe['recipeAuthor'],
+                      cookTime: recipe['recipeCookTime'],
                       viewRecipe: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => const ViewRecipe(),
+                            builder: (context) => ViewRecipe(
+                              recipeId: recipe['recipeId'],
+                              recipeTitle: recipe['recipeTitle'],
+                              recipeAuthor: recipe['recipeAuthor'],
+                              recipeAuthorImage: recipe['recipeAuthorImage'],
+                              recipeImage: recipe['recipeImage'],
+                              recipeDescription: recipe['recipeDescription'],
+                              recipeCookTime: recipe['recipeCookTime'],
+                              recipeServes: recipe['recipeServes'],
+                              recipeCategory: recipe['recipeCategory'],
+                              ingredients: recipe['ingredients'],
+                              instructions: recipe['instructions'],
+                            ),
                           ),
                         );
                       },

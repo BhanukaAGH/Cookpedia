@@ -29,7 +29,21 @@ class RecipeCard extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const ViewRecipe(),
+                  builder: (context) => const ViewRecipe(
+                    recipeId: "1",
+                    recipeTitle: 'recipeTitle',
+                    recipeAuthor: 'recipeAuthor',
+                    recipeAuthorImage:
+                        'https://images.unsplash.com/photo-1676371642915-a02e39f3dbc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+                    recipeImage:
+                        'https://images.unsplash.com/photo-1547496502-affa22d38842?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=977&q=80',
+                    recipeDescription: 'recipeDescription',
+                    recipeCookTime: 'recipeCookTime',
+                    recipeServes: '12',
+                    recipeCategory: 'recipeCategory',
+                    ingredients: ['ingredients'],
+                    instructions: ['instructions'],
+                  ),
                 ),
               );
             },
