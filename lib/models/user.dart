@@ -35,7 +35,7 @@ class User {
       uid: snapshot['uid'],
       email: snapshot['email'],
       username: snapshot['username'],
-      profileImg: snapshot['photoUrl'],
+      profileImg: snapshot['profileImg'],
       followers: snapshot['followers'],
       following: snapshot['following'],
     );

@@ -1,3 +1,4 @@
+import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/utils/global_variables.dart';
 import 'package:cookpedia/widgets/home/recipe_card.dart';
@@ -142,7 +143,13 @@ class HomeScreen extends StatelessWidget {
                           "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80",
                       postedBy: "Lahiru Madhushanka",
                       cookTime: "1hr 30mins",
-                      viewRecipe: () {},
+                      viewRecipe: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ViewRecipe(),
+                          ),
+                        );
+                      },
                     );
                   }),
                 ),
