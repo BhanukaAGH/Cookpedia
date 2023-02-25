@@ -18,9 +18,9 @@ class RecipeSpecificCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 24,
         vertical: 12,
       ),
+      width: (MediaQuery.of(context).size.width - 32) * 0.32,
       decoration: BoxDecoration(
         color: secondaryColor,
         borderRadius: BorderRadius.circular(8),
@@ -29,6 +29,7 @@ class RecipeSpecificCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 icon,
