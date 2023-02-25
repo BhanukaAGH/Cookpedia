@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
-import 'package:cookpedia/utils/global_variables.dart';
 import 'package:cookpedia/utils/utils.dart';
 import 'package:cookpedia/widgets/home/recipe_listtile.dart';
 import 'package:flutter/material.dart';
@@ -134,9 +133,7 @@ class MyRecipeScreen extends StatelessWidget {
                                     builder: (context) => ViewRecipe(
                                       recipeId: recipe['recipeId'],
                                       recipeTitle: recipe['recipeTitle'],
-                                      recipeAuthor: "John Doe",
-                                      recipeAuthorImage:
-                                          "https://images.unsplash.com/photo-1676189223716-2ca6e6ffef24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+                                      recipeAuthorId: recipe['recipeAuthorId'],
                                       recipeImage: recipe['recipeImage'],
                                       recipeDescription:
                                           recipe['recipeDescription'],

@@ -149,8 +149,7 @@ class HomeScreen extends StatelessWidget {
                             builder: (context) => ViewRecipe(
                               recipeId: recipe['recipeId'],
                               recipeTitle: recipe['recipeTitle'],
-                              recipeAuthor: recipe['recipeAuthor'],
-                              recipeAuthorImage: recipe['recipeAuthorImage'],
+                              recipeAuthorId: recipe['recipeAuthorId'],
                               recipeImage: recipe['recipeImage'],
                               recipeDescription: recipe['recipeDescription'],
                               recipeCookTime: recipe['recipeCookTime'],

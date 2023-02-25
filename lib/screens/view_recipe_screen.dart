@@ -1,14 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/view_recipe/recipe_specific_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ViewRecipe extends StatelessWidget {
+class ViewRecipe extends StatefulWidget {
   final String recipeId;
   final String recipeTitle;
-  final String recipeAuthor;
-  final String recipeAuthorImage;
   final String recipeImage;
+  final String recipeAuthorId;
   final String recipeDescription;
   final String recipeCookTime;
   final String recipeServes;
@@ -20,8 +20,7 @@ class ViewRecipe extends StatelessWidget {
     super.key,
     required this.recipeId,
     required this.recipeTitle,
-    required this.recipeAuthor,
-    required this.recipeAuthorImage,
+    required this.recipeAuthorId,
     required this.recipeImage,
     required this.recipeDescription,
     required this.recipeCookTime,
@@ -30,6 +29,32 @@ class ViewRecipe extends StatelessWidget {
     required this.ingredients,
     required this.instructions,
   });
+
+  @override
+  State<ViewRecipe> createState() => _ViewRecipeState();
+}
+
+class _ViewRecipeState extends State<ViewRecipe> {
+  String recipeAuthorName = "";
+  String recipeAuthorImage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    getRecipeAuthorDetails();
+  }
+
+  void getRecipeAuthorDetails() async {
+    final recipeAuthor = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.recipeAuthorId)
+        .get();
+
+    setState(() {
+      recipeAuthorName = recipeAuthor['username'];
+      recipeAuthorImage = recipeAuthor['profileImg'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +71,7 @@ class ViewRecipe extends StatelessWidget {
                 width: double.maxFinite,
                 height: MediaQuery.of(context).size.height * 0.35,
                 child: Image.network(
-                  recipeImage,
+                  widget.recipeImage,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -100,7 +125,7 @@ class ViewRecipe extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      recipeTitle,
+                      widget.recipeTitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.urbanist(
@@ -113,12 +138,14 @@ class ViewRecipe extends StatelessWidget {
                       contentPadding: const EdgeInsets.all(0),
                       leading: CircleAvatar(
                         radius: 24,
-                        backgroundImage: NetworkImage(
-                          recipeAuthorImage,
-                        ),
+                        backgroundImage: recipeAuthorImage.isEmpty
+                            ? const AssetImage('assets/user.jpg')
+                            : NetworkImage(
+                                recipeAuthorImage,
+                              ) as ImageProvider,
                       ),
                       title: Text(
-                        recipeAuthor,
+                        recipeAuthorName,
                         style: GoogleFonts.urbanist(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -159,7 +186,7 @@ class ViewRecipe extends StatelessWidget {
                           children: [
                             const SizedBox(height: 8),
                             Text(
-                              recipeDescription,
+                              widget.recipeDescription,
                               style: GoogleFonts.urbanist(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -171,17 +198,17 @@ class ViewRecipe extends StatelessWidget {
                               children: [
                                 RecipeSpecificCard(
                                   icon: Icons.schedule_rounded,
-                                  label: recipeCookTime,
+                                  label: widget.recipeCookTime,
                                   subLabel: 'cook time',
                                 ),
                                 RecipeSpecificCard(
                                   icon: Icons.person_outline,
-                                  label: '$recipeServes serving',
+                                  label: '${widget.recipeServes} serving',
                                   subLabel: 'serves',
                                 ),
                                 RecipeSpecificCard(
                                   icon: Icons.food_bank_outlined,
-                                  label: recipeCategory,
+                                  label: widget.recipeCategory,
                                   subLabel: 'category',
                                 ),
                               ],
@@ -202,7 +229,7 @@ class ViewRecipe extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: ingredients.length,
+                              itemCount: widget.ingredients.length,
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   visualDensity: const VisualDensity(
@@ -223,7 +250,7 @@ class ViewRecipe extends StatelessWidget {
                                     ),
                                   ),
                                   title: Text(
-                                    ingredients[index],
+                                    widget.ingredients[index],
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.urbanist(
@@ -250,7 +277,7 @@ class ViewRecipe extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: instructions.length,
+                              itemCount: widget.instructions.length,
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   horizontalTitleGap: 6,
@@ -267,7 +294,7 @@ class ViewRecipe extends StatelessWidget {
                                     ),
                                   ),
                                   title: Text(
-                                    instructions[index],
+                                    widget.instructions[index],
                                     style: GoogleFonts.urbanist(
                                       fontWeight: FontWeight.bold,
                                     ),

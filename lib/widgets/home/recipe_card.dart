@@ -32,9 +32,7 @@ class RecipeCard extends StatelessWidget {
                   builder: (context) => const ViewRecipe(
                     recipeId: "1",
                     recipeTitle: 'recipeTitle',
-                    recipeAuthor: 'recipeAuthor',
-                    recipeAuthorImage:
-                        'https://images.unsplash.com/photo-1676371642915-a02e39f3dbc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+                    recipeAuthorId: 'yd9873wifDXKimy3ItHmz5viW4h2',
                     recipeImage:
                         'https://images.unsplash.com/photo-1547496502-affa22d38842?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=977&q=80',
                     recipeDescription: 'recipeDescription',
