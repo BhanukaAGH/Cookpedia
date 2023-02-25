@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/providers/user_provider.dart';
+import 'package:cookpedia/screens/edit_recipe_screen.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/utils/utils.dart';
 import 'package:cookpedia/widgets/home/recipe_listtile.dart';
@@ -21,7 +22,15 @@ class MyRecipeScreen extends StatelessWidget {
     );
   }
 
-  void editRecipe() {}
+  void editRecipe(BuildContext context, Map<String, dynamic> recipe) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditRecipeScreen(
+          recipe: recipe,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +123,8 @@ class MyRecipeScreen extends StatelessWidget {
                               children: [
                                 SlidableAction(
                                   borderRadius: BorderRadius.circular(10),
-                                  onPressed: (context) => editRecipe(),
+                                  onPressed: (context) =>
+                                      editRecipe(context, recipe),
                                   backgroundColor: Colors.black,
                                   foregroundColor: Colors.white,
                                   icon: Icons.edit,
