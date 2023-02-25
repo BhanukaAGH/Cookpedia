@@ -8,17 +8,17 @@ class RecipeMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   //! CREATE POST
-  Future<String> createRecipe(
-    String recipeTitle,
-    String recipeCategory,
-    Uint8List imageFile,
-    String recipeDescription,
-    String recipeCookTime,
-    int recipeServes,
-    String recipeAuthorId,
-    List<String> ingredients,
-    List<String> instructions,
-  ) async {
+  Future<String> createRecipe({
+    required String recipeTitle,
+    required String recipeCategory,
+    required Uint8List imageFile,
+    required String recipeDescription,
+    required String recipeCookTime,
+    required int recipeServes,
+    required String recipeAuthorId,
+    required List<String> ingredients,
+    required List<String> instructions,
+  }) async {
     String res = 'some error occured';
     try {
       String imageUrl = await StorageMethods().uploadImageToStorage(
@@ -52,18 +52,18 @@ class RecipeMethods {
   }
 
   //! UPDATE POST
-  Future<String> updateRecipe(
-    String recipeId,
-    String recipeTitle,
-    String recipeCategory,
-    Uint8List imageFile,
-    String recipeDescription,
-    String recipeCookTime,
-    int recipeServes,
-    String recipeAuthorId,
-    List<String> ingredients,
-    List<String> instructions,
-  ) async {
+  Future<String> updateRecipe({
+    required String recipeId,
+    required String recipeTitle,
+    required String recipeCategory,
+    required Uint8List imageFile,
+    required String recipeDescription,
+    required String recipeCookTime,
+    required int recipeServes,
+    required String recipeAuthorId,
+    required List<String> ingredients,
+    required List<String> instructions,
+  }) async {
     String res = 'some error occured';
     try {
       String imageUrl = await StorageMethods().uploadImageToStorage(

@@ -1,8 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ImageInput extends StatelessWidget {
+  final Uint8List? imageFile;
+  final VoidCallback selectImage;
+  final bool isError;
+
   const ImageInput({
     Key? key,
+    this.imageFile,
+    required this.selectImage,
+    required this.isError,
   }) : super(key: key);
 
   @override
@@ -10,22 +18,30 @@ class ImageInput extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1,
       child: InkWell(
-        onTap: () {},
+        onTap: selectImage,
         child: Container(
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: Colors.black26,
             borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isError && imageFile == null
+                  ? Colors.red
+                  : Colors.transparent,
+              width: isError && imageFile == null ? 1 : 0,
+            ),
           ),
           child: ClipRRect(
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(16),
-                image: const DecorationImage(
-                  image: NetworkImage(
-                      'https://images.unsplash.com/photo-1505253758473-96b7015fcd40?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=700&q=80'),
+                image: DecorationImage(
+                  image: imageFile != null
+                      ? MemoryImage(imageFile!)
+                      : const AssetImage('assets/image_placeholder.jpg')
+                          as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
