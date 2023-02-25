@@ -13,8 +13,8 @@ class ViewRecipe extends StatelessWidget {
   final String recipeCookTime;
   final String recipeServes;
   final String recipeCategory;
-  final List<String> ingredients;
-  final List<String> instructions;
+  final List ingredients;
+  final List instructions;
 
   const ViewRecipe({
     super.key,

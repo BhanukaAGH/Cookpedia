@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/utils/global_variables.dart';
 import 'package:cookpedia/utils/utils.dart';
@@ -5,6 +7,7 @@ import 'package:cookpedia/widgets/home/recipe_listtile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class MyRecipeScreen extends StatelessWidget {
   const MyRecipeScreen({super.key});
@@ -23,6 +26,8 @@ class MyRecipeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).getUser;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -70,68 +75,86 @@ class MyRecipeScreen extends StatelessWidget {
               //! My Recipe List
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.74,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: recipes.length,
-                  itemBuilder: ((context, index) {
-                    final recipe = recipes[index];
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('recipes')
+                        .where('recipeAuthorId', isEqualTo: user.uid)
+                        .snapshots(),
+                    builder: (context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                            snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
-                    return Slidable(
-                      key: ValueKey(index),
-                      startActionPane: ActionPane(
-                        motion: const DrawerMotion(),
-                        children: [
-                          SlidableAction(
-                            borderRadius: BorderRadius.circular(10),
-                            onPressed: (context) => deleteRecipe(context),
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            icon: Icons.delete,
-                            label: 'Delete',
-                          ),
-                        ],
-                      ),
-                      endActionPane: ActionPane(
-                        motion: const StretchMotion(),
-                        children: [
-                          SlidableAction(
-                            borderRadius: BorderRadius.circular(10),
-                            onPressed: (context) => editRecipe(),
-                            backgroundColor: Colors.black,
-                            foregroundColor: Colors.white,
-                            icon: Icons.edit,
-                            label: 'Edit',
-                          ),
-                        ],
-                      ),
-                      child: RecipeListTile(
-                        title: recipe['recipeTitle'],
-                        imageUrl: recipe['recipeImage'],
-                        postedBy: recipe['recipeAuthor'],
-                        cookTime: recipe['recipeCookTime'],
-                        viewRecipe: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ViewRecipe(
-                                recipeId: recipe['recipeId'],
-                                recipeTitle: recipe['recipeTitle'],
-                                recipeAuthor: recipe['recipeAuthor'],
-                                recipeAuthorImage: recipe['recipeAuthorImage'],
-                                recipeImage: recipe['recipeImage'],
-                                recipeDescription: recipe['recipeDescription'],
-                                recipeCookTime: recipe['recipeCookTime'],
-                                recipeServes: recipe['recipeServes'],
-                                recipeCategory: recipe['recipeCategory'],
-                                ingredients: recipe['ingredients'],
-                                instructions: recipe['instructions'],
-                              ),
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final recipe = snapshot.data!.docs[index].data();
+
+                          return Slidable(
+                            key: ValueKey(index),
+                            startActionPane: ActionPane(
+                              motion: const DrawerMotion(),
+                              children: [
+                                SlidableAction(
+                                  borderRadius: BorderRadius.circular(10),
+                                  onPressed: (context) => deleteRecipe(context),
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.delete,
+                                  label: 'Delete',
+                                ),
+                              ],
+                            ),
+                            endActionPane: ActionPane(
+                              motion: const StretchMotion(),
+                              children: [
+                                SlidableAction(
+                                  borderRadius: BorderRadius.circular(10),
+                                  onPressed: (context) => editRecipe(),
+                                  backgroundColor: Colors.black,
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.edit,
+                                  label: 'Edit',
+                                ),
+                              ],
+                            ),
+                            child: RecipeListTile(
+                              title: recipe['recipeTitle'],
+                              imageUrl: recipe['recipeImage'],
+                              postedBy: "John Doe",
+                              cookTime: recipe['recipeCookTime'],
+                              viewRecipe: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => ViewRecipe(
+                                      recipeId: recipe['recipeId'],
+                                      recipeTitle: recipe['recipeTitle'],
+                                      recipeAuthor: "John Doe",
+                                      recipeAuthorImage:
+                                          "https://images.unsplash.com/photo-1676189223716-2ca6e6ffef24?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+                                      recipeImage: recipe['recipeImage'],
+                                      recipeDescription:
+                                          recipe['recipeDescription'],
+                                      recipeCookTime: recipe['recipeCookTime'],
+                                      recipeServes:
+                                          recipe['recipeServes'].toString(),
+                                      recipeCategory: recipe['recipeCategory'],
+                                      ingredients: recipe['ingredients'],
+                                      instructions: recipe['instructions'],
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           );
                         },
-                      ),
-                    );
-                  }),
-                ),
+                      );
+                    }),
               ),
             ],
           ),
