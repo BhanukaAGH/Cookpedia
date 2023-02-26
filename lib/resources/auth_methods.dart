@@ -41,6 +41,7 @@ class AuthMethods {
           'profileImages',
           image!,
           false,
+          null,
         );
 
         // add user to our database

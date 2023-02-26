@@ -34,9 +34,13 @@ class RecipeListTile extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             Expanded(

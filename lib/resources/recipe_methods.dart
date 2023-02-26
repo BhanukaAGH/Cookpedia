@@ -21,13 +21,13 @@ class RecipeMethods {
   }) async {
     String res = 'some error occured';
     try {
+      String recipeId = const Uuid().v1();
       String imageUrl = await StorageMethods().uploadImageToStorage(
         'recipes',
         imageFile,
         true,
+        recipeId,
       );
-
-      String recipeId = const Uuid().v1();
 
       Recipe recipe = Recipe(
         recipeId: recipeId,
@@ -70,6 +70,7 @@ class RecipeMethods {
         'recipes',
         imageFile,
         true,
+        recipeId,
       );
 
       Recipe recipe = Recipe(

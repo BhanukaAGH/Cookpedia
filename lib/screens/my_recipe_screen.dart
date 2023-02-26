@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/providers/user_provider.dart';
+import 'package:cookpedia/resources/recipe_methods.dart';
 import 'package:cookpedia/screens/edit_recipe_screen.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/utils/utils.dart';
@@ -12,13 +13,16 @@ import 'package:provider/provider.dart';
 class MyRecipeScreen extends StatelessWidget {
   const MyRecipeScreen({super.key});
 
-  void deleteRecipe(BuildContext context) async {
+  void deleteRecipe(BuildContext context, String recipeId) async {
     showAlertDialog(
       context: context,
       title: 'Delete Recipe',
       description: 'Are you sure you want to delete this recipe?',
       continueText: 'Delete',
-      continueFunc: () {},
+      continueFunc: () {
+        RecipeMethods().deleteRecipe(recipeId);
+        Navigator.of(context).pop();
+      },
     );
   }
 
@@ -34,9 +38,11 @@ class MyRecipeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
     final user = Provider.of<UserProvider>(context).getUser;
 
     return Scaffold(
+      key: scaffoldKey,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -97,6 +103,22 @@ class MyRecipeScreen extends StatelessWidget {
                         );
                       }
 
+                      if (snapshot.data!.docs.isEmpty) {
+                        return Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            'No recipes found',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.urbanist(
+                              color: Colors.black54,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        );
+                      }
+
                       return ListView.builder(
                         shrinkWrap: true,
                         itemCount: snapshot.data!.docs.length,
@@ -110,7 +132,10 @@ class MyRecipeScreen extends StatelessWidget {
                               children: [
                                 SlidableAction(
                                   borderRadius: BorderRadius.circular(10),
-                                  onPressed: (context) => deleteRecipe(context),
+                                  onPressed: (context) => deleteRecipe(
+                                    scaffoldKey.currentContext!,
+                                    recipe['recipeId'],
+                                  ),
                                   backgroundColor: Colors.red,
                                   foregroundColor: Colors.white,
                                   icon: Icons.delete,
