@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RecipeListTile extends StatelessWidget {
+class RecipeListTile extends StatefulWidget {
   final String title;
   final String imageUrl;
   final String postedBy;
@@ -17,6 +18,29 @@ class RecipeListTile extends StatelessWidget {
     required this.cookTime,
     this.viewRecipe,
   }) : super(key: key);
+
+  @override
+  State<RecipeListTile> createState() => _RecipeListTileState();
+}
+
+class _RecipeListTileState extends State<RecipeListTile> {
+  String recipeAuthorName = "";
+  @override
+  void initState() {
+    super.initState();
+    getRecipeAuthorDetails();
+  }
+
+  void getRecipeAuthorDetails() async {
+    final recipeAuthor = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.postedBy)
+        .get();
+
+    setState(() {
+      recipeAuthorName = recipeAuthor['username'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +61,7 @@ class RecipeListTile extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(imageUrl),
+                    image: NetworkImage(widget.imageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -56,7 +80,7 @@ class RecipeListTile extends StatelessWidget {
                   children: [
                     Text(
                       overflow: TextOverflow.ellipsis,
-                      title,
+                      widget.title,
                       style: GoogleFonts.urbanist(
                         color: Colors.black,
                         fontSize: 18,
@@ -66,7 +90,7 @@ class RecipeListTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       overflow: TextOverflow.ellipsis,
-                      postedBy,
+                      recipeAuthorName,
                       style: GoogleFonts.urbanist(
                         color: Colors.grey.shade500,
                         fontSize: 15,
@@ -86,7 +110,7 @@ class RecipeListTile extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              cookTime,
+                              widget.cookTime,
                               style: GoogleFonts.urbanist(
                                 color: primaryColor,
                                 fontSize: 12,
@@ -96,7 +120,7 @@ class RecipeListTile extends StatelessWidget {
                           ],
                         ),
                         InkWell(
-                          onTap: viewRecipe,
+                          onTap: widget.viewRecipe,
                           splashColor: Colors.grey.shade200,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,

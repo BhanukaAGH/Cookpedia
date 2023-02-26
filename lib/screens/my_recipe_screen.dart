@@ -94,9 +94,7 @@ class MyRecipeScreen extends StatelessWidget {
                         .collection('recipes')
                         .where('recipeAuthorId', isEqualTo: user.uid)
                         .snapshots(),
-                    builder: (context,
-                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                            snapshot) {
+                    builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
                           child: CircularProgressIndicator(),
@@ -160,7 +158,7 @@ class MyRecipeScreen extends StatelessWidget {
                             child: RecipeListTile(
                               title: recipe['recipeTitle'],
                               imageUrl: recipe['recipeImage'],
-                              postedBy: "John Doe",
+                              postedBy: recipe['recipeAuthorId'],
                               cookTime: recipe['recipeCookTime'],
                               viewRecipe: () {
                                 Navigator.of(context).push(

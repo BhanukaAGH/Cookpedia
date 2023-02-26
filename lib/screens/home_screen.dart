@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/utils/global_variables.dart';
@@ -132,40 +135,56 @@ class HomeScreen extends StatelessWidget {
 
               //! Vertical Recent Recipes List
               Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: recipes.length,
-                  itemBuilder: ((context, index) {
-                    final recipe = recipes[index];
-                    return RecipeListTile(
-                      title: recipe['recipeTitle'],
-                      imageUrl: recipe['recipeImage'],
-                      postedBy: recipe['recipeAuthor'],
-                      cookTime: recipe['recipeCookTime'],
-                      viewRecipe: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ViewRecipe(
-                              recipeId: recipe['recipeId'],
-                              recipeTitle: recipe['recipeTitle'],
-                              recipeAuthorId: recipe['recipeAuthorId'],
-                              recipeImage: recipe['recipeImage'],
-                              recipeDescription: recipe['recipeDescription'],
-                              recipeCookTime: recipe['recipeCookTime'],
-                              recipeServes: recipe['recipeServes'],
-                              recipeCategory: recipe['recipeCategory'],
-                              ingredients: recipe['ingredients'],
-                              instructions: recipe['instructions'],
-                              recipePublished:
-                                  recipe['recipePublished'].toDate(),
-                            ),
-                          ),
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('recipes')
+                        .orderBy('recipePublished', descending: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                    );
-                  }),
-                ),
+                      }
+
+                      return ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final recipe = snapshot.data!.docs[index].data();
+
+                          return RecipeListTile(
+                            title: recipe['recipeTitle'],
+                            imageUrl: recipe['recipeImage'],
+                            postedBy: recipe['recipeAuthorId'],
+                            cookTime: recipe['recipeCookTime'],
+                            viewRecipe: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ViewRecipe(
+                                    recipeId: recipe['recipeId'],
+                                    recipeTitle: recipe['recipeTitle'],
+                                    recipeAuthorId: recipe['recipeAuthorId'],
+                                    recipeImage: recipe['recipeImage'],
+                                    recipeDescription:
+                                        recipe['recipeDescription'],
+                                    recipeCookTime: recipe['recipeCookTime'],
+                                    recipeServes:
+                                        recipe['recipeServes'].toString(),
+                                    recipeCategory: recipe['recipeCategory'],
+                                    ingredients: recipe['ingredients'],
+                                    instructions: recipe['instructions'],
+                                    recipePublished:
+                                        recipe['recipePublished'].toDate(),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }),
               ),
             ],
           ),
