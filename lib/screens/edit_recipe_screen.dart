@@ -1,5 +1,6 @@
 import 'package:cookpedia/models/user.dart';
 import 'package:cookpedia/providers/user_provider.dart';
+import 'package:cookpedia/resources/recipe_methods.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/utils/utils.dart';
 import 'package:cookpedia/widgets/add_recipe/add_ingredients_input.dart';
@@ -8,6 +9,7 @@ import 'package:cookpedia/widgets/add_recipe/recipe_dropdown.dart';
 import 'package:cookpedia/widgets/add_recipe/recipe_text_field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -139,7 +141,87 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     });
   }
 
-  void editRecipe() async {}
+  void editRecipe(String userId) async {
+    // Validate form fields
+    final isBasicFieldValid = _basicFormKey.currentState!.validate();
+    if (ingredients.isEmpty) _ingredientsFormKey.currentState!.validate();
+    if (instructions.isEmpty) _stepsFormKey.currentState!.validate();
+
+    // Check if image is selected
+    if (imageFile == null) {
+      setState(() {
+        isImageError = true;
+      });
+    } else {
+      setState(() {
+        isImageError = false;
+      });
+    }
+
+    // Check if all fields are valid
+    if (!isBasicFieldValid ||
+        ingredients.isEmpty ||
+        instructions.isEmpty ||
+        imageFile == null) {
+      return;
+    }
+
+    // Create recipe
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      String res = await RecipeMethods().updateRecipe(
+        recipeId: widget.recipe['recipeId'],
+        recipeTitle: _titleController.text,
+        recipeCategory: recipeCategory,
+        imageFile: imageFile!,
+        recipeDescription: _descriptionController.text,
+        recipeCookTime: _cookTimeController.text,
+        recipeServes: int.parse(_servesController.text),
+        recipeAuthorId: userId,
+        ingredients: ingredients,
+        instructions: instructions,
+      );
+
+      if (res == 'Success') {
+        setState(() {
+          _isLoading = false;
+        });
+
+        Fluttertoast.showToast(
+          msg: 'Recipe updated successfully',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          // textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        Fluttertoast.showToast(
+          msg: res,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          // textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: e.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        // textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -172,7 +254,10 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                   children: [
                     FloatingActionButton.small(
                       heroTag: "backbtn",
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => {
+                        clearImage(),
+                        Navigator.of(context).pop(),
+                      },
                       backgroundColor: Colors.grey.shade400,
                       child: const Icon(Icons.arrow_back),
                     ),
@@ -194,7 +279,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
                           borderRadius: BorderRadius.circular(24),
                         ),
                       ),
-                      onPressed: () => editRecipe(),
+                      onPressed: () => editRecipe(user.uid),
                       child: !_isLoading
                           ? Text(
                               'Save',
