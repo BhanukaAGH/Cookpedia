@@ -3,6 +3,7 @@ import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/view_recipe/recipe_specific_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ViewRecipe extends StatefulWidget {
   final String recipeId;
@@ -15,6 +16,7 @@ class ViewRecipe extends StatefulWidget {
   final String recipeCategory;
   final List ingredients;
   final List instructions;
+  final DateTime recipePublished;
 
   const ViewRecipe({
     super.key,
@@ -28,6 +30,7 @@ class ViewRecipe extends StatefulWidget {
     required this.recipeCategory,
     required this.ingredients,
     required this.instructions,
+    required this.recipePublished,
   });
 
   @override
@@ -152,7 +155,7 @@ class _ViewRecipeState extends State<ViewRecipe> {
                         ),
                       ),
                       subtitle: Text(
-                        "posted 2 days ago",
+                        'posted ${timeago.format(widget.recipePublished)}',
                         style: GoogleFonts.urbanist(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

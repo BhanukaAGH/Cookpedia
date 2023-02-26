@@ -157,6 +157,8 @@ class HomeScreen extends StatelessWidget {
                               recipeCategory: recipe['recipeCategory'],
                               ingredients: recipe['ingredients'],
                               instructions: recipe['instructions'],
+                              recipePublished:
+                                  recipe['recipePublished'].toDate(),
                             ),
                           ),
                         );

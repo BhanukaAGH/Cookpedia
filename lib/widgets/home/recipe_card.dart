@@ -29,7 +29,7 @@ class RecipeCard extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const ViewRecipe(
+                  builder: (context) => ViewRecipe(
                     recipeId: "1",
                     recipeTitle: 'recipeTitle',
                     recipeAuthorId: 'yd9873wifDXKimy3ItHmz5viW4h2',
@@ -41,6 +41,7 @@ class RecipeCard extends StatelessWidget {
                     recipeCategory: 'recipeCategory',
                     ingredients: ['ingredients'],
                     instructions: ['instructions'],
+                    recipePublished: DateTime.now(),
                   ),
                 ),
               );
