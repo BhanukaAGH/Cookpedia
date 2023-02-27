@@ -1,10 +1,6 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
-import 'package:cookpedia/utils/colors.dart';
-import 'package:cookpedia/utils/global_variables.dart';
-import 'package:cookpedia/widgets/home/recipe_card.dart';
+import 'package:cookpedia/widgets/home/main_recipe_list.dart';
 import 'package:cookpedia/widgets/home/recipe_listtile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -62,58 +58,30 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
 
-              //! Categorie List
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ...['All', ...recipeCategories].map(
-                      (category) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: secondaryColor,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            category,
-                            style: GoogleFonts.urbanist(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
               //! Horizontal Recipe List
               SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return RecipeCard(
-                      title: "Recipe Title",
-                      imageUrl:
-                          'https://images.unsplash.com/photo-1604908177453-7462950a6a3b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1057&q=80',
-                      postedBy: 'Kamal Gunawardhana',
-                      isFavorite: true,
-                      clickFavorite: () {},
+                height: 260,
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('recipes')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    final recipes = snapshot.data!.docs;
+
+                    final categories = <dynamic>{};
+                    for (var recipe in recipes) {
+                      categories.add(recipe.data()['recipeCategory']);
+                    }
+
+                    //! Categorie List
+                    return MainRecipeList(
+                      categories: categories,
+                      recipes: recipes,
                     );
                   },
                 ),

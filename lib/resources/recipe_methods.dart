@@ -100,6 +100,7 @@ class RecipeMethods {
     try {
       await _firestore.collection('recipes').doc(recipeId).delete();
     } catch (error) {
+      // ignore: avoid_print
       print(error.toString());
     }
   }
