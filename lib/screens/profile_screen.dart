@@ -1,3 +1,4 @@
+import 'package:cookpedia/resources/auth_methods.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -10,6 +11,16 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Profile Screen'),
+      ),
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              AuthMethods().signOut();
+            },
+            child: const Text('Logout'),
+          ),
+        ],
       ),
     );
   }

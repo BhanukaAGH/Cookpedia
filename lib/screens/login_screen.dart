@@ -1,5 +1,5 @@
 import 'package:cookpedia/resources/auth_methods.dart';
-import 'package:cookpedia/screens/home_screen.dart';
+import 'package:cookpedia/screens/root_screen.dart';
 import 'package:cookpedia/screens/signup_screen.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/text_field_input.dart';
@@ -42,12 +42,15 @@ class _LoginScreenState extends State<LoginScreen> {
     if (res == 'success') {
       navigator.pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => const RootScreen(),
         ),
       );
     } else {
       Fluttertoast.showToast(
-          msg: res, backgroundColor: Colors.red, textColor: Colors.white);
+        msg: res,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     }
 
     setState(() {

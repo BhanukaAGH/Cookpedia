@@ -1,6 +1,6 @@
 import 'package:cookpedia/resources/auth_methods.dart';
-import 'package:cookpedia/screens/home_screen.dart';
 import 'package:cookpedia/screens/login_screen.dart';
+import 'package:cookpedia/screens/root_screen.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/utils/utils.dart';
 import 'package:cookpedia/widgets/text_field_input.dart';
@@ -61,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else {
       navigator.pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => const RootScreen(),
         ),
       );
     }
