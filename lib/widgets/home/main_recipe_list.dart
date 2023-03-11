@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cookpedia/resources/favorite_methods.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/home/recipe_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/user_provider.dart';
 
 class MainRecipeList extends StatefulWidget {
   final Set categories;
@@ -30,6 +34,8 @@ class _MainRecipeListState extends State<MainRecipeList> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).getUser;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -92,8 +98,14 @@ class _MainRecipeListState extends State<MainRecipeList> {
 
               return RecipeCard(
                 recipe: recipe,
-                isFavorite: true,
-                clickFavorite: () {},
+                isFavorite: recipe['likes'].contains(user.uid),
+                clickFavorite: () async {
+                  await FavoriteMethods().likeRecipe(
+                    recipe['recipeId'],
+                    user.uid,
+                    recipe['likes'],
+                  );
+                },
               );
             },
           ),
