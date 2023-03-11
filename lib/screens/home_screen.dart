@@ -27,34 +27,41 @@ class HomeScreen extends StatelessWidget {
               ),
 
               //! Search bar
-              Container(
-                margin: const EdgeInsets.only(top: 12, bottom: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: Colors.grey.shade600,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Search',
-                          hintStyle: GoogleFonts.urbanist(
-                            color: Colors.grey.shade600,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
+              GestureDetector(
+                // onTap: () => Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => const SearchScreen(),
+                //   ),
+                // ),
+                child: Container(
+                  margin: const EdgeInsets.only(top: 12, bottom: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.search,
+                        color: Colors.grey.shade600,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Search',
+                            hintStyle: GoogleFonts.urbanist(
+                              color: Colors.grey.shade600,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
@@ -132,19 +139,6 @@ class HomeScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => ViewRecipe(
                                     recipeId: recipe['recipeId'],
-                                    recipeTitle: recipe['recipeTitle'],
-                                    recipeAuthorId: recipe['recipeAuthorId'],
-                                    recipeImage: recipe['recipeImage'],
-                                    recipeDescription:
-                                        recipe['recipeDescription'],
-                                    recipeCookTime: recipe['recipeCookTime'],
-                                    recipeServes:
-                                        recipe['recipeServes'].toString(),
-                                    recipeCategory: recipe['recipeCategory'],
-                                    ingredients: recipe['ingredients'],
-                                    instructions: recipe['instructions'],
-                                    recipePublished:
-                                        recipe['recipePublished'].toDate(),
                                   ),
                                 ),
                               );

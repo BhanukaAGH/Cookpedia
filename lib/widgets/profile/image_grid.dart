@@ -57,16 +57,6 @@ class ImageGrid extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => ViewRecipe(
                       recipeId: recipe['recipeId'],
-                      recipeTitle: recipe['recipeTitle'],
-                      recipeAuthorId: recipe['recipeAuthorId'],
-                      recipeImage: recipe['recipeImage'],
-                      recipeDescription: recipe['recipeDescription'],
-                      recipeCookTime: recipe['recipeCookTime'],
-                      recipeServes: recipe['recipeServes'].toString(),
-                      recipeCategory: recipe['recipeCategory'],
-                      ingredients: recipe['ingredients'],
-                      instructions: recipe['instructions'],
-                      recipePublished: recipe['recipePublished'].toDate(),
                     ),
                   ),
                 );

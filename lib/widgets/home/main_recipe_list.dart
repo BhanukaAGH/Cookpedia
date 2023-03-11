@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cookpedia/resources/favorite_methods.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/home/recipe_card.dart';
 import 'package:flutter/material.dart';
@@ -99,13 +98,6 @@ class _MainRecipeListState extends State<MainRecipeList> {
               return RecipeCard(
                 recipe: recipe,
                 isFavorite: recipe['likes'].contains(user.uid),
-                clickFavorite: () async {
-                  await FavoriteMethods().likeRecipe(
-                    recipe['recipeId'],
-                    user.uid,
-                    recipe['likes'],
-                  );
-                },
               );
             },
           ),

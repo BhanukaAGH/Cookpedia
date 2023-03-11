@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cookpedia/providers/user_provider.dart';
+import 'package:cookpedia/resources/favorite_methods.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class RecipeCard extends StatefulWidget {
   final Map<String, dynamic> recipe;
   final bool isFavorite;
-  final void Function()? clickFavorite;
 
   const RecipeCard({
     Key? key,
     required this.recipe,
     required this.isFavorite,
-    this.clickFavorite,
   }) : super(key: key);
 
   @override
@@ -22,10 +23,12 @@ class RecipeCard extends StatefulWidget {
 
 class _RecipeCardState extends State<RecipeCard> {
   String recipeAuthorName = "";
+  bool _isFavorite = false;
   @override
   void initState() {
     super.initState();
     getRecipeAuthorDetails();
+    checkIsFavorite();
   }
 
   void getRecipeAuthorDetails() async {
@@ -34,13 +37,23 @@ class _RecipeCardState extends State<RecipeCard> {
         .doc(widget.recipe['recipeAuthorId'])
         .get();
 
+    if (mounted) {
+      setState(() {
+        recipeAuthorName = recipeAuthor['username'];
+      });
+    }
+  }
+
+  void checkIsFavorite() async {
     setState(() {
-      recipeAuthorName = recipeAuthor['username'];
+      _isFavorite = widget.isFavorite;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).getUser;
+
     return AspectRatio(
       aspectRatio: 1.2,
       child: Stack(
@@ -51,16 +64,6 @@ class _RecipeCardState extends State<RecipeCard> {
                 MaterialPageRoute(
                   builder: (context) => ViewRecipe(
                     recipeId: widget.recipe['recipeId'],
-                    recipeTitle: widget.recipe['recipeTitle'],
-                    recipeAuthorId: widget.recipe['recipeAuthorId'],
-                    recipeImage: widget.recipe['recipeImage'],
-                    recipeDescription: widget.recipe['recipeDescription'],
-                    recipeCookTime: widget.recipe['recipeCookTime'],
-                    recipeServes: widget.recipe['recipeServes'].toString(),
-                    recipeCategory: widget.recipe['recipeCategory'],
-                    ingredients: widget.recipe['ingredients'],
-                    instructions: widget.recipe['instructions'],
-                    recipePublished: widget.recipe['recipePublished'].toDate(),
                   ),
                 ),
               );
@@ -128,13 +131,27 @@ class _RecipeCardState extends State<RecipeCard> {
             top: 8,
             right: 1,
             child: ElevatedButton(
-              onPressed: widget.clickFavorite,
+              onPressed: () async {
+                await FavoriteMethods()
+                    .likeRecipe(
+                  widget.recipe['recipeId'],
+                  user.uid,
+                  widget.recipe['likes'],
+                )
+                    .then((value) {
+                  if (mounted) {
+                    setState(() {
+                      _isFavorite = !_isFavorite;
+                    });
+                  }
+                });
+              },
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
                 padding: const EdgeInsets.all(8),
               ),
               child: Icon(
-                widget.isFavorite
+                _isFavorite
                     ? Icons.favorite_rounded
                     : Icons.favorite_border_rounded,
               ),
