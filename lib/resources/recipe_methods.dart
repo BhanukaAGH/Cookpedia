@@ -41,6 +41,7 @@ class RecipeMethods {
         recipePublished: DateTime.now(),
         ingredients: ingredients,
         instructions: instructions,
+        likes: [],
       );
 
       _firestore.collection('recipes').doc(recipeId).set(recipe.toJson());
@@ -63,6 +64,7 @@ class RecipeMethods {
     required String recipeAuthorId,
     required List<String> ingredients,
     required List<String> instructions,
+    required List<String> likes,
   }) async {
     String res = 'some error occured';
     try {
@@ -85,6 +87,7 @@ class RecipeMethods {
         recipePublished: DateTime.now(),
         ingredients: ingredients,
         instructions: instructions,
+        likes: likes,
       );
 
       _firestore.collection('recipes').doc(recipeId).update(recipe.toJson());
