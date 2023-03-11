@@ -182,6 +182,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
         recipeAuthorId: userId,
         ingredients: ingredients,
         instructions: instructions,
+        likes: widget.recipe['likes'],
       );
 
       if (res == 'Success') {
