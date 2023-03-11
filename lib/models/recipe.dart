@@ -13,7 +13,7 @@ class Recipe {
   final List<String> ingredients;
   final List<String> instructions;
   final List<String> likes;
-  
+
   Recipe({
     required this.recipeId,
     required this.recipeTitle,
@@ -28,7 +28,7 @@ class Recipe {
     required this.instructions,
     required this.likes,
   });
-  
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'recipeId': recipeId,
