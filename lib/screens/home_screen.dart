@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/widgets/home/main_recipe_list.dart';
 import 'package:cookpedia/widgets/home/recipe_listtile.dart';
+import 'package:cookpedia/widgets/home/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,45 +26,11 @@ class HomeScreen extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              const SizedBox(height: 12),
 
               //! Search bar
-              GestureDetector(
-                // onTap: () => Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => const SearchScreen(),
-                //   ),
-                // ),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 12, bottom: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.search,
-                        color: Colors.grey.shade600,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Search',
-                            hintStyle: GoogleFonts.urbanist(
-                              color: Colors.grey.shade600,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              const SearchBar(),
+              const SizedBox(height: 8),
 
               //! Horizontal Recipe List
               SizedBox(

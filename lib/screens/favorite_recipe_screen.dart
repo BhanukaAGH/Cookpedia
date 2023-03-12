@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/providers/user_provider.dart';
+import 'package:cookpedia/screens/search_screen.dart';
 import 'package:cookpedia/widgets/home/recipe_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,7 +32,11 @@ class FavoriteScreen extends StatelessWidget {
                   const Spacer(),
                   FloatingActionButton.small(
                     heroTag: "searchbtn",
-                    onPressed: () => {},
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const SearchScreen(),
+                      ),
+                    ),
                     backgroundColor: Colors.grey.shade400,
                     child: const Icon(Icons.search),
                   ),
