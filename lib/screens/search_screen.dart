@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cookpedia/screens/view_recipe_screen.dart';
+import 'package:cookpedia/widgets/home/recipe_listtile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -79,6 +82,61 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 12),
+                FutureBuilder(
+                  future: FirebaseFirestore.instance
+                      .collection('recipes')
+                      .where('recipeTitle',
+                          isGreaterThanOrEqualTo: _searchController.text)
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    if (snapshot.data!.docs.isEmpty) {
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          'No recipes found',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.urbanist(
+                            color: Colors.black54,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: (snapshot.data! as dynamic).docs.length,
+                      itemBuilder: (context, index) {
+                        final recipe = (snapshot.data! as dynamic).docs[index];
+
+                        return RecipeListTile(
+                          title: recipe['recipeTitle'],
+                          imageUrl: recipe['recipeImage'],
+                          postedBy: recipe['recipeAuthorId'],
+                          cookTime: recipe['recipeCookTime'],
+                          viewRecipe: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ViewRecipe(
+                                  recipeId: recipe['recipeId'],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),
