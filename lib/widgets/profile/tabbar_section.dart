@@ -2,6 +2,9 @@ import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/profile/followers_listview.dart';
 import 'package:cookpedia/widgets/profile/image_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/user_provider.dart';
 
 class TabBarSection extends StatefulWidget {
   const TabBarSection({super.key});
@@ -13,13 +16,14 @@ class TabBarSection extends StatefulWidget {
 class _TabBarSectionState extends State<TabBarSection> {
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).getUser;
     return DefaultTabController(
       length: 2,
       child: Flexible(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: const <Widget>[
-            TabBar(
+          children: <Widget>[
+            const TabBar(
               indicatorColor: primaryColor,
               labelColor: primaryColor,
               unselectedLabelColor: Colors.grey,
@@ -38,7 +42,9 @@ class _TabBarSectionState extends State<TabBarSection> {
               child: TabBarView(
                 children: [
                   ImageGrid(),
-                  FollowersListView(),
+                  FollowersListView(
+                    userId: user.uid,
+                  ),
                 ],
               ),
             ),

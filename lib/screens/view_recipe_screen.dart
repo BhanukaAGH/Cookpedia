@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/resources/favorite_methods.dart';
+import 'package:cookpedia/providers/follwing_followes.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/view_recipe/recipe_specific_card.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +13,6 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class ViewRecipe extends StatefulWidget {
   final String recipeId;
-
   const ViewRecipe({super.key, required this.recipeId});
 
   @override
@@ -32,6 +34,7 @@ class _ViewRecipeState extends State<ViewRecipe> {
   String recipeAuthorName = "";
   String recipeAuthorImage = "";
   bool isLoading = true;
+  bool _isInit = true;
 
   @override
   void initState() {
@@ -82,6 +85,12 @@ class _ViewRecipeState extends State<ViewRecipe> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).getUser;
+    final followMethods = Provider.of<FollowingFollowersMethods>(context);
+
+    if (_isInit) {
+      followMethods.checkFollowed(user.uid, widget.recipeId);
+      _isInit = false;
+    }
 
     return WillPopScope(
       onWillPop: () => Future.value(false),
@@ -203,25 +212,32 @@ class _ViewRecipeState extends State<ViewRecipe> {
                               ),
                             ),
                             trailing: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                backgroundColor: primaryColor,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(20),
+                                onPressed: () {
+                                  setState(() {
+                                    followMethods.changeFollowing();
+                                  });
+                                  FollowingFollowersMethods()
+                                      .following(user.uid, recipeAuthorId);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  backgroundColor: primaryColor,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              child: Text(
-                                "Follow",
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                                child: Text(
+                                  followMethods.isFollowedCheck
+                                      ? 'UnFollow'
+                                      : 'Follow',
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )),
                           ),
                           const Divider(),
                           Flexible(

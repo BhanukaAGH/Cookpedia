@@ -5,6 +5,9 @@ import 'package:cookpedia/widgets/home/recipe_listtile.dart';
 import 'package:cookpedia/widgets/home/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
