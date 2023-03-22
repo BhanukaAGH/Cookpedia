@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
+                UserProvider().refreshUser();
                 return const RootScreen();
               } else if (snapshot.hasError) {
                 return Center(

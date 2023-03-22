@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class FavoriteMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -14,7 +15,7 @@ class FavoriteMethods {
         });
       }
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 }
