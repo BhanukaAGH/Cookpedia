@@ -90,6 +90,32 @@ class AuthMethods {
     return res;
   }
 
+  //Update User
+  Future<String> updateUser({
+    required String uid,
+    required String name,
+    required String photoUrl,
+    required String email,
+  }) async {
+    String res = 'some error occured';
+    try {
+      model.User user = model.User(
+          uid: uid,
+          username: name,
+          email: email,
+          profileImg: photoUrl,
+          followers: [],
+          following: []);
+
+      _firestore.collection('users').doc(uid).update(user.toJson());
+
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
   //! SignOut User
   Future<void> signOut() async {
     try {
