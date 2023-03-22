@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cookpedia/resources/auth_methods.dart';
+import 'package:cookpedia/screens/login_screen.dart';
 import 'package:cookpedia/screens/root_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _ProfileEditState extends State<ProfileEdit> {
   final TextEditingController _emailController = TextEditingController();
   Uint8List? _image;
   bool isLoading = false;
+  bool isAccountDelete = false;
   void updateProfileImage() async {
     Uint8List image = await pickImage(ImageSource.gallery);
     setState(() {
@@ -94,6 +96,36 @@ class _ProfileEditState extends State<ProfileEdit> {
     });
   }
 
+  void deletDialogBox(BuildContext context) {
+    showAlertDialog(
+        context: context,
+        continueText: 'delete',
+        title: 'Account Delete',
+        description: 'Are you sure do you want to delete this account ?',
+        continueFunc: () => accountdelete(context));
+  }
+
+  void accountdelete(BuildContext context) async {
+    try {
+      setState(() {
+        isAccountDelete = true;
+      });
+      await AuthMethods().deleteAccount();
+      setState(() {
+        isAccountDelete = false;
+      });
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+      showSnackBar('Account Deleted Succssfully', context, null);
+    } catch (e) {
+      setState(() {
+        isAccountDelete = false;
+      });
+      showSnackBar('error happen!', context, redIconColor);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).getUser;
@@ -106,100 +138,130 @@ class _ProfileEditState extends State<ProfileEdit> {
             horizontal: 16,
             vertical: 12,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FloatingActionButton.small(
-                onPressed: () => {
-                  Navigator.of(context).pop(),
-                },
-                backgroundColor: Colors.grey.shade400,
-                child: const Icon(Icons.arrow_back),
-              ),
-              ListView(
-                shrinkWrap: true,
-                children: [
-                  Center(
-                    child: Stack(children: [
-                      Container(
-                        width: 150,
-                        height: 150,
-                        decoration: BoxDecoration(
-                            border: Border.all(width: 4, color: Colors.white),
-                            boxShadow: [
-                              BoxShadow(
-                                  spreadRadius: 2,
-                                  blurRadius: 10,
-                                  color: Colors.black.withOpacity(0.1))
-                            ],
-                            shape: BoxShape.circle,
-                            image: _image != null
-                                ? DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: MemoryImage(_image!))
-                                : DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(user.profileImg))),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border:
-                                  Border.all(width: 4, color: primaryColor)),
-                          child: IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: primaryColor,
-                            onPressed: () {
-                              updateProfileImage();
-                            },
-                          ),
-                        ),
-                      )
-                    ]),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  buildTextFelid(
-                      'Full Name', user.username, _userNameController),
-                  buildTextFelid(
-                      'Your Email Address', user.email, _emailController),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  ElevatedButton(
-                      onPressed: () => update(user.uid, user.username,
-                          user.email, user.profileImg, context),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        backgroundColor: primaryColor,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                      ),
-                      child: isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FloatingActionButton.small(
+                      onPressed: () => {
+                        Navigator.of(context).pop(),
+                      },
+                      backgroundColor: Colors.grey.shade400,
+                      child: const Icon(Icons.arrow_back),
+                    ),
+                    isAccountDelete
+                        ? const CircularProgressIndicator()
+                        : OutlinedButton(
+                            onPressed: () => {deletDialogBox(context)},
+                            style: OutlinedButton.styleFrom(
+                              onSurface: Colors.red,
+                              padding: const EdgeInsets.all(15),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
                               ),
-                            )
-                          : Text(
-                              'Update Your Profile',
+                            ),
+                            child: Text(
+                              'Delete Your Account',
                               style: GoogleFonts.urbanist(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ))
-                ],
-              )
-            ],
+                  ],
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Center(
+                      child: Stack(children: [
+                        Container(
+                          width: 150,
+                          height: 150,
+                          decoration: BoxDecoration(
+                              border: Border.all(width: 4, color: Colors.white),
+                              boxShadow: [
+                                BoxShadow(
+                                    spreadRadius: 2,
+                                    blurRadius: 10,
+                                    color: Colors.black.withOpacity(0.1))
+                              ],
+                              shape: BoxShape.circle,
+                              image: _image != null
+                                  ? DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: MemoryImage(_image!))
+                                  : DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(user.profileImg))),
+                        ),
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(width: 4, color: primaryColor)),
+                            child: IconButton(
+                              icon: const Icon(Icons.edit),
+                              color: primaryColor,
+                              onPressed: () {
+                                updateProfileImage();
+                              },
+                            ),
+                          ),
+                        )
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    buildTextFelid(
+                        'Full Name', user.username, _userNameController),
+                    buildTextFelid(
+                        'Your Email Address', user.email, _emailController),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton(
+                        onPressed: () => update(user.uid, user.username,
+                            user.email, user.profileImg, context),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          backgroundColor: primaryColor,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                          ),
+                        ),
+                        child: isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text(
+                                'Update Your Profile',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ))
+                  ],
+                )
+              ],
+            ),
           ),
         )),
       ),

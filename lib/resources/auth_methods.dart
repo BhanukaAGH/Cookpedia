@@ -99,6 +99,10 @@ class AuthMethods {
   }) async {
     String res = 'some error occured';
     try {
+      if (_auth.currentUser!.email != email) {
+        await _auth.currentUser!.updateEmail(email);
+      }
+
       model.User user = model.User(
           uid: uid,
           username: name,
@@ -124,6 +128,16 @@ class AuthMethods {
       if (kDebugMode) {
         print(err.toString());
       }
+    }
+  }
+
+  //Delete User account
+  Future<void> deleteAccount() async {
+    try {
+      await _auth.currentUser!.delete();
+      await _auth.signOut();
+    } catch (err) {
+      print(err);
     }
   }
 }
