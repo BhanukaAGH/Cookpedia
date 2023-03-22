@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cookpedia/resources/auth_methods.dart';
+import 'package:cookpedia/screens/root_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,12 +33,6 @@ class _ProfileEditState extends State<ProfileEdit> {
     });
   }
 
-  void getUserValues(String name) {
-    // final name = userNameController.text;
-    // final email = emailController.text;
-    // String a =name ?? 'dfdsfdfsd';
-  }
-
   update(String uid, String userName, String email, String profileImg,
       BuildContext context) async {
     String nameInputValue = _userNameController.text;
@@ -59,7 +54,9 @@ class _ProfileEditState extends State<ProfileEdit> {
 
         if (res == 'success') {
           showSnackBar('Updated!', context, null);
-          Navigator.of(context).pop();
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const RootScreen()),
+          );
         } else {
           showSnackBar('error', context, redIconColor);
         }
@@ -78,7 +75,9 @@ class _ProfileEditState extends State<ProfileEdit> {
 
           if (res == 'success') {
             showSnackBar('Updated!', context, null);
-            Navigator.of(context).pop();
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const RootScreen()),
+            );
           } else {
             showSnackBar('error', context, redIconColor);
           }
