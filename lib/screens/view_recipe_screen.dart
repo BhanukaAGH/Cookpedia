@@ -8,6 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import 'comment_screen.dart';
+
 class ViewRecipe extends StatefulWidget {
   final String recipeId;
 
@@ -351,6 +353,43 @@ class _ViewRecipeState extends State<ViewRecipe> {
                                         ),
                                       );
                                     },
+                                  ),
+
+                                  const SizedBox(height: 8),
+                                  ElevatedButton(
+                                    onPressed: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => CommentScreen(
+                                          recipeId: widget.recipeId,
+                                          commentAuthorId: user.uid,
+                                          commentAuthorName: user.username,
+                                          commentAuthorImage: user.profileImg,
+                                        ),
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(32),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Comments',
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        const Icon(Icons.arrow_right_alt),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
