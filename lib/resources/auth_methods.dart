@@ -61,7 +61,6 @@ class AuthMethods {
         res = 'success';
       }
     } catch (err) {
-      print(err);
       if (err.toString().contains('[firebase_auth/email-already-in-use]')) {
         res = "This email is already taken";
       } else if (err.toString().contains('[firebase_auth/weak-password]')) {
