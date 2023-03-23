@@ -90,7 +90,6 @@ class AuthMethods {
         res = 'Please enter all the fields.';
       }
     } catch (err) {
-      print(err);
       if (err.toString().contains('[firebase_auth/user-not-found]')) {
         res = "Credential invalid or The user may have been deleted";
       } else if (err.toString().contains('[firebase_auth/wrong-password]')) {
