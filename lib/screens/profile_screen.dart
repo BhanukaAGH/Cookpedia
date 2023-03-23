@@ -1,5 +1,7 @@
+import 'package:cookpedia/providers/follwing_followes.dart';
 import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/resources/auth_methods.dart';
+import 'package:cookpedia/screens/profile_edit.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/profile/counter_section.dart';
 import 'package:cookpedia/widgets/profile/tabbar_section.dart';
@@ -7,13 +9,34 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final String uid;
   const ProfileScreen({super.key, required this.uid});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    addData();
+  }
+
+  addData() async {
+    print('Profile Page');
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    await userProvider.refreshUser();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).getUser;
+    final userExtraInfo = Provider.of<FollowingFollowersMethods>(context);
+    userExtraInfo.getUserInformation(user.uid);
+    final res = userExtraInfo.countValues;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -82,7 +105,12 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 trailing: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const ProfileEdit()),
+                    );
+                  },
                   icon: const Icon(Icons.edit),
                   label: const Text('Edit'),
                   style: OutlinedButton.styleFrom(
@@ -99,10 +127,13 @@ class ProfileScreen extends StatelessWidget {
               const Divider(indent: 8, endIndent: 8, height: 28),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CounterSection(title: 'Recipes', count: 125),
-                  CounterSection(title: 'Following', count: 225),
-                  CounterSection(title: 'Followers', count: 46),
+                children: [
+                  CounterSection(
+                      title: 'Recipes', count: res['recipeCount'] as int),
+                  CounterSection(
+                      title: 'Following', count: res['following'] as int),
+                  CounterSection(
+                      title: 'Followers', count: res['followers'] as int),
                 ],
               ),
               const Divider(indent: 8, endIndent: 8, height: 32),

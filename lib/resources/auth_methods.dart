@@ -61,7 +61,13 @@ class AuthMethods {
         res = 'success';
       }
     } catch (err) {
-      res = err.toString();
+      if (err.toString().contains('[firebase_auth/email-already-in-use]')) {
+        res = "This email is already taken";
+      } else if (err.toString().contains('[firebase_auth/weak-password]')) {
+        res = " Password should be at least 6 characters long";
+      } else {
+        res = "Could not authenticate you. Please try aging letter!";
+      }
     }
     return res;
   }
@@ -84,9 +90,49 @@ class AuthMethods {
         res = 'Please enter all the fields.';
       }
     } catch (err) {
-      res = err.toString();
+      if (err.toString().contains('[firebase_auth/user-not-found]')) {
+        res = "Credential invalid or The user may have been deleted";
+      } else if (err.toString().contains('[firebase_auth/wrong-password]')) {
+        res = "This is not a valid password";
+      } else if (err.toString().contains('EMAIL_EXISTS')) {
+        res = 'This email is already taken';
+      } else {
+        res = "Could not authenticate you. Please try aging letter!";
+      }
+      // res = err.toString();
+      print(res);
     }
 
+    return res;
+  }
+
+  //Update User
+  Future<String> updateUser({
+    required String uid,
+    required String name,
+    required String photoUrl,
+    required String email,
+  }) async {
+    String res = 'some error occured';
+    try {
+      if (_auth.currentUser!.email != email) {
+        await _auth.currentUser!.updateEmail(email);
+      }
+
+      model.User user = model.User(
+          uid: uid,
+          username: name,
+          email: email,
+          profileImg: photoUrl,
+          followers: [],
+          following: []);
+
+      _firestore.collection('users').doc(uid).update(user.toJson());
+
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
     return res;
   }
 
@@ -98,6 +144,16 @@ class AuthMethods {
       if (kDebugMode) {
         print(err.toString());
       }
+    }
+  }
+
+  //Delete User account
+  Future<void> deleteAccount() async {
+    try {
+      await _auth.currentUser!.delete();
+      await _auth.signOut();
+    } catch (err) {
+      print(err);
     }
   }
 }

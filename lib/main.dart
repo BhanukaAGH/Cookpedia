@@ -1,4 +1,5 @@
 import 'package:cookpedia/providers/user_provider.dart';
+import 'package:cookpedia/providers/follwing_followes.dart';
 import 'package:cookpedia/screens/login_screen.dart';
 import 'package:cookpedia/screens/root_screen.dart';
 import 'package:cookpedia/utils/colors.dart';
@@ -25,7 +26,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => UserProvider(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FollowingFollowersMethods(),
+        ),
       ],
       child: MaterialApp(
         title: 'Cookpedia',

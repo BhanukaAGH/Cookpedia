@@ -34,10 +34,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void signUpUser() async {
     final isFormValid = _formKey.currentState!.validate();
-    if (isFormValid == false) {
+    if (isFormValid == false || _image == null) {
+      showSnackBar('Please Upload a Profile Image', context, redIconColor);
       return;
     }
-
     setState(() {
       _isLoading = true;
     });
