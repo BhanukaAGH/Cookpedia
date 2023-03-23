@@ -25,6 +25,7 @@ class FollowingFollowersMethods with ChangeNotifier {
     return followingList;
   }
 
+//add and remove  following
   Future<void> following(String userId, String followerId) async {
     List<dynamic> following = await getFollowingList(userId, 'following');
     if (following.contains(followerId)) {
@@ -39,6 +40,7 @@ class FollowingFollowersMethods with ChangeNotifier {
     followers(userId, followerId);
   }
 
+//add and remove followers
   Future<void> followers(String userId, String followerId) async {
     List<dynamic> followers = await getFollowingList(followerId, 'followers');
     if (followers.contains(userId)) {
@@ -52,6 +54,7 @@ class FollowingFollowersMethods with ChangeNotifier {
         .update({'followers': followers});
   }
 
+//check user is following
   Future<void> checkFollowed(String userId, String recipeId) async {
     final res = await _firestore.collection('recipes').doc(recipeId).get();
     List<dynamic> following = await getFollowingList(userId, 'following');
@@ -60,12 +63,14 @@ class FollowingFollowersMethods with ChangeNotifier {
     }
   }
 
+// get following list
   Future<List<dynamic>> getFollowingList(String userId, String type) async {
     final user = await _firestore.collection('users').doc(userId).get();
     List<dynamic> following = user.data()![type];
     return following;
   }
 
+//get recipe count,following and followers count
   Future<void> getUserInformation(String userId) async {
     final user = await _firestore.collection('users').doc(userId).get();
     final recipe = await _firestore

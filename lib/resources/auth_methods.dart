@@ -61,7 +61,14 @@ class AuthMethods {
         res = 'success';
       }
     } catch (err) {
-      res = err.toString();
+      print(err);
+      if (err.toString().contains('[firebase_auth/email-already-in-use]')) {
+        res = "This email is already taken";
+      } else if (err.toString().contains('[firebase_auth/weak-password]')) {
+        res = " Password should be at least 6 characters long";
+      } else {
+        res = "Could not authenticate you. Please try aging letter!";
+      }
     }
     return res;
   }
@@ -84,7 +91,18 @@ class AuthMethods {
         res = 'Please enter all the fields.';
       }
     } catch (err) {
-      res = err.toString();
+      print(err);
+      if (err.toString().contains('[firebase_auth/user-not-found]')) {
+        res = "Credential invalid or The user may have been deleted";
+      } else if (err.toString().contains('[firebase_auth/wrong-password]')) {
+        res = "This is not a valid password";
+      } else if (err.toString().contains('EMAIL_EXISTS')) {
+        res = 'This email is already taken';
+      } else {
+        res = "Could not authenticate you. Please try aging letter!";
+      }
+      // res = err.toString();
+      print(res);
     }
 
     return res;
