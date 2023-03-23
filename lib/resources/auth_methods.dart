@@ -99,8 +99,6 @@ class AuthMethods {
       } else {
         res = "Could not authenticate you. Please try aging letter!";
       }
-      // res = err.toString();
-      print(res);
     }
 
     return res;
@@ -153,7 +151,9 @@ class AuthMethods {
       await _auth.currentUser!.delete();
       await _auth.signOut();
     } catch (err) {
-      print(err);
+      if (kDebugMode) {
+        print(err);
+      }
     }
   }
 }

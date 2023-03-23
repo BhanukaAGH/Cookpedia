@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cookpedia/models/user.dart';
+import 'package:cookpedia/providers/follwing_followes.dart';
+import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../models/user.dart';
-import '../../providers/follwing_followes.dart';
-import '../../providers/user_provider.dart';
 
 class FollowersListView extends StatefulWidget {
   final String userId;
@@ -21,7 +20,6 @@ class _FollowersListViewState extends State<FollowersListView> {
   @override
   void initState() {
     getFollwingList();
-    // TODO: implement initState
     super.initState();
   }
 
@@ -31,15 +29,14 @@ class _FollowersListViewState extends State<FollowersListView> {
       setState(() {
         _isLoading = true;
       });
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-      final user =
-          await _firestore.collection('users').doc(widget.userId).get();
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final user = await firestore.collection('users').doc(widget.userId).get();
       List<dynamic> following = user.data()!['following'];
-      await _firestore
+      await firestore
           .collection('users')
           .get()
           .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
+        for (var doc in querySnapshot.docs) {
           if (following.contains(doc['uid'])) {
             listOfFollowing.add(User(
                 uid: doc['uid'],
@@ -49,7 +46,7 @@ class _FollowersListViewState extends State<FollowersListView> {
                 followers: doc['followers'],
                 following: doc['following']));
           }
-        });
+        }
       });
       setState(() {
         _isLoading = false;
@@ -73,7 +70,6 @@ class _FollowersListViewState extends State<FollowersListView> {
 
   @override
   Widget build(BuildContext context) {
-    print('bulid');
     final user = Provider.of<UserProvider>(context).getUser;
     final followMethods = Provider.of<FollowingFollowersMethods>(context);
 

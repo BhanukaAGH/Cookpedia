@@ -1,10 +1,9 @@
+import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/profile/followers_listview.dart';
 import 'package:cookpedia/widgets/profile/image_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../providers/user_provider.dart';
 
 class TabBarSection extends StatefulWidget {
   const TabBarSection({super.key});
@@ -41,7 +40,7 @@ class _TabBarSectionState extends State<TabBarSection> {
             Flexible(
               child: TabBarView(
                 children: [
-                  ImageGrid(),
+                  const ImageGrid(),
                   FollowersListView(
                     userId: user.uid,
                   ),

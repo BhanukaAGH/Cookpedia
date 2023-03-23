@@ -1,18 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
 import 'dart:typed_data';
 
+import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/resources/auth_methods.dart';
+import 'package:cookpedia/resources/storage_methods.dart';
 import 'package:cookpedia/screens/login_screen.dart';
 import 'package:cookpedia/screens/root_screen.dart';
+import 'package:cookpedia/utils/colors.dart';
+import 'package:cookpedia/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
-import '../providers/user_provider.dart';
-import '../resources/storage_methods.dart';
-import '../utils/colors.dart';
-import '../utils/utils.dart';
 
 class ProfileEdit extends StatefulWidget {
   const ProfileEdit({super.key});
@@ -52,7 +52,11 @@ class _ProfileEditState extends State<ProfileEdit> {
     try {
       if (_image == null) {
         String res = await AuthMethods().updateUser(
-            uid: uid, name: userName, photoUrl: profileImg, email: email);
+          uid: uid,
+          name: userName,
+          photoUrl: profileImg,
+          email: email,
+        );
 
         if (res == 'success') {
           showSnackBar('Updated!', context, null);
@@ -68,7 +72,7 @@ class _ProfileEditState extends State<ProfileEdit> {
       } else {
         String imageUrl = await StorageMethods()
             .uploadImageToStorage('profileImages', _image!, false, null);
-        if (imageUrl.length != 0) {
+        if (imageUrl.isNotEmpty) {
           String res = await AuthMethods().updateUser(
               uid: FirebaseAuth.instance.currentUser!.uid,
               name: userName,
@@ -157,8 +161,9 @@ class _ProfileEditState extends State<ProfileEdit> {
                         : OutlinedButton(
                             onPressed: () => {deletDialogBox(context)},
                             style: OutlinedButton.styleFrom(
-                              onSurface: Colors.red,
                               padding: const EdgeInsets.all(15),
+                              disabledForegroundColor:
+                                  Colors.red.withOpacity(0.38),
                               shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),

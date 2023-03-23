@@ -25,7 +25,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   addData() async {
-    print('Profile Page');
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     await userProvider.refreshUser();

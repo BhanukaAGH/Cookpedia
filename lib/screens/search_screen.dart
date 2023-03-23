@@ -3,9 +3,6 @@ import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/widgets/home/recipe_listtile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-
-import '../providers/user_provider.dart';
 
 class SearchScreen extends StatefulWidget {
   final String? searchQuery;
@@ -34,7 +31,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -133,7 +129,6 @@ class _SearchScreenState extends State<SearchScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ViewRecipe(
                                   recipeId: recipe['recipeId'],
-                                
                                 ),
                               ),
                             );
