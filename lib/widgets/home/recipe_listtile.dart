@@ -43,6 +43,12 @@ class _RecipeListTileState extends State<RecipeListTile> {
   }
 
   @override
+  void dispose() {
+    recipeAuthorName = "";
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 112,

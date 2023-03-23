@@ -1,6 +1,7 @@
 import 'package:cookpedia/providers/follwing_followes.dart';
 import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/resources/auth_methods.dart';
+import 'package:cookpedia/screens/login_screen.dart';
 import 'package:cookpedia/screens/profile_edit.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/profile/counter_section.dart';
@@ -9,26 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   final String uid;
   const ProfileScreen({super.key, required this.uid});
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  @override
-  void initState() {
-    super.initState();
-    addData();
-  }
-
-  addData() async {
-    UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
-    await userProvider.refreshUser();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +20,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final userExtraInfo = Provider.of<FollowingFollowersMethods>(context);
     userExtraInfo.getUserInformation(user.uid);
     final res = userExtraInfo.countValues;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -65,6 +50,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     backgroundColor: primaryColor,
                     child: IconButton(
                       onPressed: () async {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
                         await AuthMethods().signOut();
                       },
                       color: Colors.white,
@@ -128,11 +118,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CounterSection(
-                      title: 'Recipes', count: res['recipeCount'] as int),
+                      title: 'Recipes', count: res['recipeCount'].toString()),
                   CounterSection(
-                      title: 'Following', count: res['following'] as int),
+                      title: 'Following', count: res['following'].toString()),
                   CounterSection(
-                      title: 'Followers', count: res['followers'] as int),
+                      title: 'Followers', count: res['followers'].toString()),
                 ],
               ),
               const Divider(indent: 8, endIndent: 8, height: 32),

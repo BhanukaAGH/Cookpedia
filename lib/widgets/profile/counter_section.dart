@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CounterSection extends StatelessWidget {
   final String title;
-  final int count;
+  final String count;
 
   const CounterSection({
     Key? key,
@@ -27,7 +27,7 @@ class CounterSection extends StatelessWidget {
           ),
         ),
         child: Text(
-          '$count',
+          count,
           textAlign: TextAlign.center,
           style: GoogleFonts.urbanist(
             color: Colors.black,

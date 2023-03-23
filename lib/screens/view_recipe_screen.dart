@@ -35,8 +35,8 @@ class _ViewRecipeState extends State<ViewRecipe> {
   late final List likes;
   String recipeAuthorName = "";
   String recipeAuthorImage = "";
+  bool isFollowing = false;
   bool isLoading = true;
-  bool _isInit = true;
 
   @override
   void initState() {
@@ -76,6 +76,10 @@ class _ViewRecipeState extends State<ViewRecipe> {
               setState(() {
                 recipeAuthorName = value['username'];
                 recipeAuthorImage = value['profileImg'];
+                isFollowing = value['followers'].contains(
+                    Provider.of<UserProvider>(context, listen: false)
+                        .getUser
+                        .uid);
               })
             });
 
@@ -87,12 +91,6 @@ class _ViewRecipeState extends State<ViewRecipe> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).getUser;
-    final followMethods = Provider.of<FollowingFollowersMethods>(context);
-
-    if (_isInit) {
-      followMethods.checkFollowed(user.uid, widget.recipeId);
-      _isInit = false;
-    }
 
     return WillPopScope(
       onWillPop: () => Future.value(false),
@@ -215,11 +213,11 @@ class _ViewRecipeState extends State<ViewRecipe> {
                             ),
                             trailing: ElevatedButton(
                                 onPressed: () {
-                                  setState(() {
-                                    followMethods.changeFollowing();
-                                  });
                                   FollowingFollowersMethods()
                                       .following(user.uid, recipeAuthorId);
+                                  setState(() {
+                                    isFollowing = !isFollowing;
+                                  });
                                 },
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
@@ -232,9 +230,7 @@ class _ViewRecipeState extends State<ViewRecipe> {
                                   ),
                                 ),
                                 child: Text(
-                                  followMethods.isFollowedCheck
-                                      ? 'UnFollow'
-                                      : 'Follow',
+                                  isFollowing ? 'UnFollow' : 'Follow',
                                   style: GoogleFonts.urbanist(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,

@@ -1,3 +1,4 @@
+import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/resources/auth_methods.dart';
 import 'package:cookpedia/screens/root_screen.dart';
 import 'package:cookpedia/screens/signup_screen.dart';
@@ -40,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text, password: _passwordController.text);
 
     if (res == 'success') {
+      await UserProvider().refreshUser();
       navigator.pushReplacement(
         MaterialPageRoute(
           builder: (context) => const RootScreen(),

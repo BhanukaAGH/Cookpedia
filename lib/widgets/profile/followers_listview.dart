@@ -97,7 +97,7 @@ class _FollowersListViewState extends State<FollowersListView> {
                     followMethods.getUserInformation(user.uid);
                   },
                   child: checkIsFollowing(index, user.uid)
-                      ? const Text('UnFollow')
+                      ? const Text('Unfollow')
                       : const Text('Follow'),
                 ),
               );

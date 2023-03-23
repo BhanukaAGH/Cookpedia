@@ -1,3 +1,4 @@
+import 'package:cookpedia/providers/user_provider.dart';
 import 'package:cookpedia/resources/auth_methods.dart';
 import 'package:cookpedia/screens/login_screen.dart';
 import 'package:cookpedia/screens/root_screen.dart';
@@ -53,6 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
 
     if (res != 'success') {
+      await UserProvider().refreshUser();
       Fluttertoast.showToast(
         msg: res,
         backgroundColor: Colors.red,
