@@ -134,10 +134,13 @@ class _CommentScreenState extends State<CommentScreen> {
                                 ),
                                 trailing: user.uid == comment['commentAuthorId']
                                     ? IconButton(
-                                        onPressed: () =>
-                                            CommentMethods().deleteComment(
-                                          comment['commentId'],
-                                        ),
+                                        onPressed: () => {
+                                          CommentMethods().deleteComment(
+                                            comment['commentId'],
+                                          ),
+                                          Fluttertoast.showToast(
+                                              msg: 'Comment deleted')
+                                        },
                                         icon: const Icon(
                                           Icons.delete,
                                           size: 20,
