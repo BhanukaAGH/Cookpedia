@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/widgets/home/recipe_listtile.dart';
@@ -14,6 +16,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -23,10 +26,18 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
+  _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      setState(() {});
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
     _searchController.dispose();
+    _debounce?.cancel();
   }
 
   @override
@@ -66,9 +77,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         title: TextField(
                           controller: _searchController,
-                          onSubmitted: (value) {
-                            setState(() {});
-                          },
+                          onChanged: _onSearchChanged,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Search',
@@ -85,11 +94,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 const SizedBox(height: 12),
                 FutureBuilder(
-                  future: FirebaseFirestore.instance
-                      .collection('recipes')
-                      .where('recipeTitle',
-                          isGreaterThanOrEqualTo: _searchController.text)
-                      .get(),
+                  future:
+                      FirebaseFirestore.instance.collection('recipes').get(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -113,11 +119,21 @@ class _SearchScreenState extends State<SearchScreen> {
                       );
                     }
 
+                    final List<QueryDocumentSnapshot> filteredRecipes =
+                        (snapshot.data! as dynamic)
+                            .docs
+                            .where((recipe) => (recipe['recipeTitle']
+                                .toString()
+                                .toLowerCase()
+                                .contains(
+                                    _searchController.text.toLowerCase())))
+                            .toList();
+
                     return ListView.builder(
                       shrinkWrap: true,
-                      itemCount: (snapshot.data! as dynamic).docs.length,
+                      itemCount: filteredRecipes.length,
                       itemBuilder: (context, index) {
-                        final recipe = (snapshot.data! as dynamic).docs[index];
+                        final recipe = filteredRecipes[index];
 
                         return RecipeListTile(
                           title: recipe['recipeTitle'],
