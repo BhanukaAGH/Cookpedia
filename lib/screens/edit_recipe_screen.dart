@@ -172,7 +172,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
         _isLoading = true;
       });
       String res = await RecipeMethods().updateRecipe(
-        recipeId: widget.recipe['recipeId'],
+        recipeId: widget.recipe['recipeId'] as String,
         recipeTitle: _titleController.text,
         recipeCategory: recipeCategory,
         imageFile: imageFile!,
@@ -182,7 +182,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
         recipeAuthorId: userId,
         ingredients: ingredients,
         instructions: instructions,
-        likes: widget.recipe['likes'],
+        likes: List<String>.from(widget.recipe['likes'] as List),
       );
 
       if (res == 'Success') {
