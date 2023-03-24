@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookpedia/resources/comment_methods.dart';
 import 'package:cookpedia/utils/colors.dart';
+import 'package:cookpedia/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -135,8 +136,17 @@ class _CommentScreenState extends State<CommentScreen> {
                                 trailing: user.uid == comment['commentAuthorId']
                                     ? IconButton(
                                         onPressed: () => {
-                                          CommentMethods().deleteComment(
-                                            comment['commentId'],
+                                          showAlertDialog(
+                                            context: context,
+                                            title: 'Delete Comment',
+                                            description:
+                                                'Are you sure you want to delete this comment?',
+                                            continueText: 'Delete',
+                                            continueFunc: () {
+                                              CommentMethods().deleteComment(
+                                                  comment['commentId']);
+                                              Navigator.of(context).pop();
+                                            },
                                           ),
                                           Fluttertoast.showToast(
                                               msg: 'Comment deleted')
