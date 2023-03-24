@@ -146,10 +146,10 @@ class _CommentScreenState extends State<CommentScreen> {
                                               CommentMethods().deleteComment(
                                                   comment['commentId']);
                                               Navigator.of(context).pop();
+                                              Fluttertoast.showToast(
+                                                  msg: 'Comment deleted');
                                             },
                                           ),
-                                          Fluttertoast.showToast(
-                                              msg: 'Comment deleted')
                                         },
                                         icon: const Icon(
                                           Icons.delete,

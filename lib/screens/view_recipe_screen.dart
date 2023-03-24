@@ -7,6 +7,7 @@ import 'package:cookpedia/providers/follwing_followes.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:cookpedia/widgets/view_recipe/recipe_specific_card.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -142,6 +143,11 @@ class _ViewRecipeState extends State<ViewRecipe> {
                                   ? likes.remove(user.uid)
                                   : likes.add(user.uid);
                             });
+                            Fluttertoast.showToast(
+                              msg: likes.contains(user.uid)
+                                  ? 'Recipe added to favorites'
+                                  : 'Recipe removed from favorites',
+                            );
                           },
                           backgroundColor: primaryColor,
                           child: Icon(

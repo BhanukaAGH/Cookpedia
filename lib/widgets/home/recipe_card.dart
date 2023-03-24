@@ -4,6 +4,7 @@ import 'package:cookpedia/resources/favorite_methods.dart';
 import 'package:cookpedia/screens/view_recipe_screen.dart';
 import 'package:cookpedia/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -144,6 +145,11 @@ class _RecipeCardState extends State<RecipeCard> {
                       _isFavorite = !_isFavorite;
                     });
                   }
+                  Fluttertoast.showToast(
+                    msg: mounted && _isFavorite
+                        ? 'Recipe added to favorites'
+                        : 'Recipe removed from favorites',
+                  );
                 });
               },
               style: ElevatedButton.styleFrom(
